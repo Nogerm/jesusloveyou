@@ -2,8 +2,8 @@ import axios from 'axios';
 
 //Mongo DB
 const BASE_URL = 'https://api.mlab.com/api/1/';
-const API_KEY = 'tLCbdkrVRTli_sKDGTHQrKrCTs9R4Zvt';
-const dbName = 'heroku_n6ll7jq5';
+const API_KEY = 'TH5qM1haCd8dUxMmvT-oI7Z7fNNGlnwg';
+const dbName = 'heroku_vlwpl52g';
 
 //Collections
 const ROUTINE_PERSON = 'routine_person';
