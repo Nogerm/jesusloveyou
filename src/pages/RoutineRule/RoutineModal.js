@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Icon, Modal, Form, Input } from 'semantic-ui-react'
-import { getRoutineRule, addRoutineRule, updateRoutineRule, removeRoutineRule } from '../MongoDB';
-const uuidv4 = require('uuid/v4');
+import { Button, Icon, Modal, Form, Input } from 'semantic-ui-react';
+import { routineCreateNew, routineDelete, routineUpdate } from '../Api';
 
 export default class RoutineModal extends Component {
 
@@ -30,7 +29,6 @@ export default class RoutineModal extends Component {
 
   modalRuleAddSubmit = () => {
     const newData = {
-      id: uuidv4(),
       month: this.state.inputRuleType,
       routines: [{
         week_day: 1,
@@ -52,8 +50,16 @@ export default class RoutineModal extends Component {
         name: this.state.inputWeekday6.toString()
       }]
     }
-    addRoutineRule(newData);
-    this.modalRuleAddClose();
+
+    routineCreateNew(newData)
+    .then(response => {
+      console.log("routineCreateNew OK" + JSON.stringify(response.data));
+      this.modalRuleAddClose();
+    })
+    .catch(err => {
+      console.log("routineCreateNew NG" + JSON.stringify(err));
+      this.modalRuleAddClose();
+    });
   }
 
   modalRuleRemoveOpen = () => {
@@ -65,21 +71,19 @@ export default class RoutineModal extends Component {
   }
 
   modalRuleRemoveSubmit = () => {
-    removeRoutineRule(this.state.rule._id);
-    this.modalRuleRemoveClose();
+    routineDelete(this.state.rule._id)
+    .then(response => {
+      console.log("routineDelete OK" + JSON.stringify(response.data));
+      this.modalRuleRemoveClose();
+    })
+    .catch(err => {
+      console.log("routineDelete NG" + JSON.stringify(err));
+      this.modalRuleRemoveClose();
+    });
   }
 
   modalRuleUpdateOpen = () => {
-    this.setState({ 
-      modalRuleUpdateShow: true
-    }, () => {
-      getRoutineRule().then(data => {
-        const ruleGroup = data.find(rule => rule._id === this.state.rule._id);
-        this.setState({
-          rule: [...ruleGroup]
-        });
-      });
-    });
+    this.setState({ modalRuleUpdateShow: true });
   }
 
   modalRuleUpdateClose = () => {
@@ -88,7 +92,7 @@ export default class RoutineModal extends Component {
 
   modalRuleUpdateSubmit = () => {
     const newData = {
-      id: this.state.rule._id,
+      _id: this.state.rule._id,
       month: this.state.rule.month,
       routines: [{
         week_day: 1,
@@ -111,8 +115,15 @@ export default class RoutineModal extends Component {
       }]
     }
     
-    updateRoutineRule(newData)
-    this.modalRuleUpdateClose();
+    routineUpdate(newData)
+    .then(response => {
+      console.log("routineUpdate OK" + JSON.stringify(response.data));
+      this.modalRuleUpdateClose();
+    })
+    .catch(err => {
+      console.log("routineUpdate NG" + JSON.stringify(err));
+      this.modalRuleUpdateClose();
+    });
   }
 
   radioChange = (e, { value }) => {

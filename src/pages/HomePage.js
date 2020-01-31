@@ -99,6 +99,11 @@ export default class HomePage extends Component {
     window.location.href = loginUrl;
   }
 
+  handleLogoutClicked = () => {
+    const redirectUri = "https://nogerm.github.io/jesusloveyou";
+    window.location.href = redirectUri;
+  }
+
   handleItemClick = (e, { name, path }) => {
     this.setState({ 
       activeItem: path
@@ -145,16 +150,18 @@ export default class HomePage extends Component {
     const renderBody  = this.renderBody;
     const userName = this.state.userName;
     const userImageUrl = this.state.userImageUrl;
+    const hasLoggedIn = this.state.hasLoggedIn;
     return (
       <Grid>
         <Grid.Row columns={1} style={{padding: '0px'}}>
           <Segment raised style={{background: '#37474f', margin: '0px', flex:1}}>
             <div style={{flexDirection: 'row', display: 'flex' }}>
               <Image style={{height:'52px', width:'52px'}} src={lineLogo}/>
-              <Header as='h1' style={{color:'white', margin:'0px', padding:'8px', flex:1, fontFamily: 'Roboto'}}>耶穌愛你 設定介面</Header>
+              <Header as='h1' style={{color:'white', margin:'0px', padding:'8px', flex:1, fontFamily: 'Roboto'}}>立翔小幫手 設定介面</Header>
               <Image avatar src={userImageUrl} style={{width:'52px', height:'52px', padding:'8px'}}/>
               <Header as='h1' style={{color:'white', margin:'0px', minWidth:'100px', padding:'8px', fontFamily: 'Noto Sans TC'}}>{userName}</Header>
-              <Button floated='right' style={{color:'white', background:'#00B300', margin:'8px'}} onClick={this.handleLoginClicked}>LINE LOGIN</Button>
+              {!hasLoggedIn && <Button floated='right' style={{color:'white', background:'#00B300', margin:'8px'}} onClick={this.handleLoginClicked}>登入</Button>}
+              {hasLoggedIn  && <Button floated='right' style={{color:'white', background:'#00B300', margin:'8px'}} onClick={this.handleLogoutClicked}>登出</Button>}
             </div>
           </Segment>
         </Grid.Row>

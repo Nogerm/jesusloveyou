@@ -1,7 +1,7 @@
 import React, { Component}  from 'react';
 import { Icon, Table, Divider, Header, Segment } from 'semantic-ui-react'
-import { getRoutineRule } from '../MongoDB';
 import RoutineModal from './RoutineModal';
+import { routineGetAll } from '../Api';
 
 export default class RoutineRule extends Component {
 
@@ -14,24 +14,21 @@ export default class RoutineRule extends Component {
   }
 
   queryData = () => {
-		getRoutineRule().then(data => {
-      console.log("[RoutineRule queryData]" + JSON.stringify(data));
+    routineGetAll()
+    .then(response => {
+      console.log("[routineGetAll] OK " + JSON.stringify(response.data));
       this.setState({
-        routineRules: [...data]
+        routineRules: [...response.data]
       });
+    })
+    .catch(err => {
+      console.log("[routineGetAll] NG " + JSON.stringify(err));
     });
-  }
-
-  delayQuery = () => {
-    const queryData = this.queryData;
-    setTimeout(() => {
-      queryData();
-    }, 2000);
   }
 
   render() {
     const rules = this.state.routineRules;
-    const delayQuery = this.delayQuery;
+    const queryData = this.queryData;
 
     return(
       <Segment raised>
@@ -67,8 +64,8 @@ export default class RoutineRule extends Component {
                   <Table.Cell>{rule.routines[4].name}</Table.Cell>
                   <Table.Cell>{rule.routines[5].name}</Table.Cell>
                   <Table.Cell>
-                    <RoutineModal type='REMOVE' rule={rule} callback={delayQuery}/>
-                    <RoutineModal type='UPDATE' rule={rule} callback={delayQuery}/>
+                    <RoutineModal type='REMOVE' rule={rule} callback={queryData}/>
+                    <RoutineModal type='UPDATE' rule={rule} callback={queryData}/>
                   </Table.Cell>
                 </Table.Row>
               );
@@ -78,7 +75,7 @@ export default class RoutineRule extends Component {
           <Table.Footer fullWidth>
             <Table.Row>
               <Table.HeaderCell colSpan='8'>
-                <RoutineModal type='ADD' callback={delayQuery}/>
+                <RoutineModal type='ADD' callback={queryData}/>
               </Table.HeaderCell>
             </Table.Row>
           </Table.Footer>
